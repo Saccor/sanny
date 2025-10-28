@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import {
   NavigationMenu,
@@ -31,6 +32,10 @@ const navItems = [
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  
+  const linkClass = (href: string) => 
+    href === pathname ? "text-white" : "text-zinc-400 hover:text-zinc-200";
 
   return (
     <header className="border-b border-zinc-800 sticky top-0 z-50 bg-zinc-950/95 backdrop-blur supports-backdrop-filter:bg-zinc-950/80">
@@ -47,7 +52,7 @@ export default function Header() {
               {navItems.map((item) => (
                 <NavigationMenuItem key={item.href}>
                   <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                    <Link href={item.href}>
+                    <Link href={item.href} className={linkClass(item.href)}>
                       {item.label}
                     </Link>
                   </NavigationMenuLink>
@@ -74,7 +79,7 @@ export default function Header() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setOpen(false)}
-                    className="text-lg font-medium hover:text-zinc-400 transition-colors"
+                    className={`text-lg font-medium transition-colors ${linkClass(item.href)}`}
                   >
                     {item.label}
                   </Link>
