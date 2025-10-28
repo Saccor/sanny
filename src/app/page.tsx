@@ -1,13 +1,7 @@
 import { fighter } from '@/data/mock';
+import { buildPersonLd } from '@/lib/seo';
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: fighter.name,
-  jobTitle: 'Athlete',
-  nationality: fighter.nationality,
-  sameAs: [fighter.social.instagram, fighter.social.youtube, fighter.social.patreon].filter(Boolean)
-};
+const jsonLd = buildPersonLd(fighter);
 
 export default function Home() {
   return (

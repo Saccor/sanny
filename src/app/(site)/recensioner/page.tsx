@@ -1,5 +1,6 @@
 import { reviews } from "@/data/mock";
 import { CheckCircle } from "lucide-react";
+import ReviewForm from "@/components/sections/ReviewForm";
 
 export default function RecensionerPage() {
   const renderStars = (rating: number) => {
@@ -13,7 +14,7 @@ export default function RecensionerPage() {
         Vad mina klienter säger om träningen
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
         {reviews.map((review) => (
           <div
             key={review.id}
@@ -51,6 +52,8 @@ export default function RecensionerPage() {
           Inga recensioner ännu
         </p>
       )}
+
+      <ReviewForm />
     </div>
   );
 }

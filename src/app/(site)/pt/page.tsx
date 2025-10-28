@@ -1,10 +1,49 @@
 "use client";
 
+import { useState } from "react";
 import { ptSlots } from "@/data/mock";
 import { Button } from "@/components/ui/button";
-import { MapPin, Clock } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { MapPin, Clock, CreditCard } from "lucide-react";
 
 export default function PTPage() {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleBooking = async (slotId: string) => {
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ slotId }),
+      });
+
+      // Since API doesn't exist yet, we'll handle the error gracefully
+      if (!response.ok) {
+        throw new Error('API not implemented yet');
+      }
+
+      const data = await response.json();
+      console.log('Checkout response:', data);
+    } catch (error) {
+      console.log('Booking attempt for slot:', slotId);
+      // Show dialog since API isn't ready yet
+      setDialogOpen(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="py-10">
       <h1 className="text-4xl font-bold mb-4">Personlig Träning</h1>
@@ -71,17 +110,44 @@ export default function PTPage() {
               <div className="flex items-center justify-between">
                 <span className="text-2xl font-bold">{slot.priceSEK} kr</span>
                 <Button
-                  onClick={() => alert('Kommer snart')}
-                  disabled={slot.status !== "available"}
+                  onClick={() => handleBooking(slot.id)}
+                  disabled={slot.status !== "available" || isLoading}
                   variant={slot.status === "available" ? "default" : "secondary"}
                 >
-                  {slot.status === "available" ? "Boka" : "Ej tillgänglig"}
+                  {isLoading ? "Laddar..." : slot.status === "available" ? "Boka" : "Ej tillgänglig"}
                 </Button>
               </div>
             </div>
           );
         })}
       </div>
+
+      {/* Booking Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <CreditCard className="h-5 w-5" />
+              Betalning
+            </DialogTitle>
+            <DialogDescription className="pt-4">
+              <div className="text-center space-y-4">
+                <p className="text-lg font-medium text-zinc-300">
+                  Stripe-flöde kommer snart
+                </p>
+                <p className="text-sm text-zinc-500">
+                  Vi håller på att integrera Stripe för säkra betalningar. Du kommer snart kunna boka och betala direkt här på sidan.
+                </p>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end mt-4">
+            <Button onClick={() => setDialogOpen(false)}>
+              Stäng
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
