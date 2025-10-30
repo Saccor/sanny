@@ -1,4 +1,4 @@
-# Sanny – Officiell Webbplats
+# Sanny – Officiell Webbplats test
 
 > Officiell webbplats för Sanny, svensk fighter och personlig tränare. Modern, responsiv webbplats byggd med Next.js 16 och Tailwind CSS v4.
 
